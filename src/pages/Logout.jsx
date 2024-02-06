@@ -8,7 +8,7 @@ export function Logout(){
     const navigate = useNavigate()
     useEffect(()=>{
         dispatch(resetToken())
-        navigate('/login')
+        navigate('/')
     },[dispatch, navigate])
     return(
         <div>logout work !</div>

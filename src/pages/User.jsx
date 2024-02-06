@@ -1,20 +1,29 @@
 /* eslint-disable no-console */
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./User.css";
 import Nav from "../components/Nav/Nav";
 import Footer from "../components/Footer/Footer";
 import { useSelector, useDispatch } from "react-redux";
 import { setProfile } from "../slices/profile";
+import { useNavigate } from "react-router-dom";
 
 export default function User() {
   const profile = useSelector((state) => state.profile.profile);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const [edit, setEdit] = useState(false);
+  // state = store
+  // state.token = reducer token dans le store
+  //state.token.token = token dans initial state du slice tokenSlice
   const token = useSelector((state) => state.token.token);
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
-
+  useEffect(()=>{
+    if(token==""){
+      navigate('/login')
+    }
+  },[navigate,token])
   // console.log(profile)
   const handleEditClick = () => {
     setEdit(true);

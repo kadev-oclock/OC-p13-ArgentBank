@@ -19,6 +19,7 @@ export default function Login() {
   
   const submitForm = async (e) => {
     e.preventDefault();
+    try {
     const res = await fetch("http://localhost:3001/api/v1/user/login", {
       method: "post",
       headers: {
@@ -28,6 +29,10 @@ export default function Login() {
     });
     const data = await res.json();
     dispatch(setToken(data.body.token))
+  }
+  catch (err){
+    alert("Utilisateur ou mot de passe incorrect")
+  }
   };
   useEffect(()=>{
     (async ()=>{
