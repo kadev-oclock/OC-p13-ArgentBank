@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from "react";
 import "./User.css";
 import Nav from "../components/Nav/Nav";
@@ -14,6 +15,7 @@ export default function User() {
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
 
+  // console.log(profile)
   const handleEditClick = () => {
     setEdit(true);
   };
@@ -39,11 +41,11 @@ export default function User() {
           lastName: lastName,
         }),
       });
-      console.log(token)
+      // console.log(res)
 
       if (res.ok) {
         
-        dispatch(setProfile({ payload: { firstName, lastName } }));
+        dispatch(setProfile( { firstName, lastName }));
         setEdit(false);
       } else {
        console.error("Échec de la mise à jour du profil");
@@ -78,7 +80,7 @@ export default function User() {
               </>
             ) : (
               <>
-                {profile.firstName} {profile.lastName}
+                {firstName} {lastName}
               </>
             )}
           </h1>
