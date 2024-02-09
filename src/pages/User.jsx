@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./User.css";
-import Nav from "../components/Nav/Nav";
 import Footer from "../components/Footer/Footer";
 import { useSelector, useDispatch } from "react-redux";
 import { setProfile } from "../slices/profile";
@@ -10,22 +9,24 @@ import { useNavigate } from "react-router-dom";
 export default function User() {
   const profile = useSelector((state) => state.profile.profile);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [edit, setEdit] = useState(false);
   // state = store
   // state.token = reducer token dans le store
   //state.token.token = token dans initial state du slice tokenSlice
   const token = useSelector((state) => state.token.token);
+  const [errorMessage, setErrorMessage] = useState("");
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
-  useEffect(()=>{
-    if(token==""){
-      navigate('/login')
+  useEffect(() => {
+    if (token == "") {
+      navigate("/login");
     }
-  },[navigate,token])
+  }, [navigate, token]);
   // console.log(profile)
   const handleEditClick = () => {
+    setErrorMessage(""); // Effacer le message d'erreur lorsque l'utilisateur commence à éditer
     setEdit(true);
   };
 
@@ -36,14 +37,20 @@ export default function User() {
   };
 
   const updateProfile = async () => {
-  
+    // Réinitialiser le message d'erreur
+    setErrorMessage("");
+    if (!firstName.trim() || !lastName.trim()) {
+      setErrorMessage("Veuillez entrer un prénom et un nom ");
+      return; // Arrêter la mise à jour du profil si les champs sont vides
+    }
+
     try {
       const res = await fetch("http://localhost:3001/api/v1/user/profile", {
         method: "put",
         headers: {
           "Content-type": "application/json",
           // Ajouter le jeton pour l'authentification
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           firstName: firstName,
@@ -53,11 +60,10 @@ export default function User() {
       // console.log(res)
 
       if (res.ok) {
-        
-        dispatch(setProfile( { firstName, lastName }));
+        dispatch(setProfile({ firstName, lastName }));
         setEdit(false);
       } else {
-       console.error("Échec de la mise à jour du profil");
+        console.error("Échec de la mise à jour du profil");
         // Gérer les cas d'erreur
       }
     } catch (error) {
@@ -68,7 +74,6 @@ export default function User() {
 
   return (
     <>
-      <Nav />
       <main className="main bg-dark">
         <div className="header">
           <h1>
@@ -93,6 +98,7 @@ export default function User() {
               </>
             )}
           </h1>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           {edit ? (
             <>
               <button className="cancel-button" onClick={handleCancelClick}>
@@ -129,7 +135,7 @@ export default function User() {
           </div>
         </section>
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }

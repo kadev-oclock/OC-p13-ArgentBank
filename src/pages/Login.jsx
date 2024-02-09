@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from "react";
 import "./Login.css";
-import Nav from "../components/Nav/Nav";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
 import { useSelector, useDispatch } from "react-redux";
@@ -52,7 +51,6 @@ export default function Login() {
   },[token,dispatch,navigate])
   return (
     <>
-      <Nav />
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
